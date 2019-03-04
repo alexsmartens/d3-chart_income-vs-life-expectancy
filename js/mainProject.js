@@ -122,7 +122,7 @@ d3.json("data/data.json").then(function(data){
  
 
 
-    // Update fugure repeatedly
+    // Update figure repeatedly
     var max_iter = dataFiltered.length
     var count = 0
 
