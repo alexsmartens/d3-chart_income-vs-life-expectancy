@@ -99,11 +99,35 @@ d3.json("data/data.json").then(function(data){
         .domain([0, d3.max(dataFiltered, dataThisYear => 
                            d3.max(dataThisYear.countries, d => d.population))])
         .range([70, 3000])
+        var continents = ["europe", "asia", "americas", "africa"]
     continent
-        .domain(dataFiltered[0].countries.map(d => d.continent))
+        .domain(continents)
         .range(d3.schemeCategory10)
 
+
+
+    // Add legend
+    var legend = g.append("g")
+        .attr("transform", "translate(" + (width - 10) + "," + (height - 125) + ")")
     
+    continents.forEach(function(continentCurrent, i){
+        var legendRow = legend.append("g")
+            .attr("transform", "translate(0, " + (i * 20) + ")")
+
+        legendRow.append("rect")
+            .attr("width", 10)
+            .attr("height", 10)
+            .attr("fill", continent(continentCurrent))
+
+        legendRow.append("text")
+            .attr("x", -10)
+            .attr("y", 10)
+            .attr("text-anchor", "end")
+            .style("text-transform", "capitalize")
+            .text(continentCurrent)       
+    })
+
+       
 
     // Add scales
     var yAxisCall= d3.axisLeft(y)
