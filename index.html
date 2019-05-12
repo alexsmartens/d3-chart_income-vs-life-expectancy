@@ -5,32 +5,46 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>D3 chart: Relationship between income and life expectancy</title>
+    <title class="chartName"></title>
     <!-- jQuery UI CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.structure.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.theme.min.css">
     <!-- D3 Tooltip CSS -->
     <link rel="stylesheet" href="css/d3-tip.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
 
 <body>
+    <nav class="navbar navbar-default">
+        <div class="container"  >
+            <div class="row">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-8">
+                    <a class="navbar-brand" href="#"><span class="chartName"></span></a>    
+                </div>  
+            </div>  
+        </div>
+    </nav>
 
-    <!-- <div class="container" align="center">
-        <div id="chart-area"></div>  
-    </div> -->
+
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-2">
                 <button id="play-button" class="btn btn-primary">Play</button>
                 <button id="reset-button" class="btn btn-primary">Reset</button>
+            </div>
+            
+            <div class="col-md-4">
                 <div id="slider-div">
                     <label>Year: <span id="year">1800</span></label>
-                    <div id="date-slider"></div>
+                    <div id="date-slider">
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            
+            <div class="col-md-2">
                 <select id="continent-select" class="form-control">
                     <option selected value="all">All</option>
                     <option value="europe">Europe</option>
@@ -40,21 +54,32 @@
                 </select>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-12">
-                <div id="chart-area"></div>                 
+                <div id="chart-area">
+                </div>                 
             </div> 
         </div>
     </div>
 
-<!-- External JS libraries -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.1/d3.min.js"></script>
-<script src="js/d3-tip.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<!-- Custom JS -->
-<script src="js/mainProject.js"></script>
+
+    <!-- External JS libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.2/d3.min.js"></script>
+    <script src="js/d3-tip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/mainProject.js"></script>
+
+
+    <!-- Add chart name where required -->
+    <script>
+        $(".chartName").each(function() {
+            $( this ).html("D3 Chart: Global Relationship between Income and Life Expectancy")
+        });
+    </script>
 
 </body>
 </html>

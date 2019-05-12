@@ -18,7 +18,6 @@ g.append("text")
     .attr("y", -50)
     .attr("text-anchor", "middle")
     .attr("font-size", 18)
-    .text("D3 chart: Relationship between income and life expectancy")
 
 // Add axes labels
 g.append("text")
