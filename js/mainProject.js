@@ -56,6 +56,18 @@ var continent = d3.scaleOrdinal()
 // Animation time interval
 var timeInterval = 100
 
+// Tooltip
+var tip = d3.tip().attr('class', 'd3-tip')
+    .html(function(d) {
+        var text = "<strong>Country:</strong> <span style='color:red'>" + d.country + "</span><br>";
+        text += "<strong>Continent:</strong> <span style='color:red;text-transform:capitalize'>" + d.continent + "</span><br>";
+        text += "<strong>Life Expectancy:</strong> <span style='color:red'>" + d3.format(".2f")(d.life_exp) + "</span><br>";
+        text += "<strong>GDP Per Capita:</strong> <span style='color:red'>" + d3.format("$,.0f")(d.income) + "</span><br>";
+        text += "<strong>Population:</strong> <span style='color:red'>" + d3.format(",.0f")(d.population) + "</span><br>";
+        return text;
+    });
+g.call(tip);
+
 
 
 
@@ -207,6 +219,8 @@ function updateFigure(dataObject){
         .attr("cy", d => y(d.life_exp))
         .attr("cx", d => x(d.income))
         .attr("r", 0)
+        .on("mouseover", tip.show)
+        .on("mouseout", tip.hide)
         // AND UPDATE old elements present in new data
         // in this case, circles represents UPDATE selection
         .merge(circles)
