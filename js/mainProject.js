@@ -125,6 +125,15 @@ $("#continent-select")
         update(dataFiltered[time]);
     })
 
+$("#date-slider").slider({
+    max: 2014,
+    min: 1800,
+    step: 1,
+    slide: function(event, ui){
+        time = ui.value - 1800;
+        update(dataFiltered[time]);
+    }
+})
 
 function initialize(dataFiltered){
     // Compute scales
@@ -212,6 +221,8 @@ function update(dataObject){
         })
     }
     
+    $("#year")[0].innerHTML = +(time + 1800)
+    $("#date-slider").slider("value", +(time + 1800))
 
     // JOIN new data with old elements 
     var circles = g.selectAll("circle")
