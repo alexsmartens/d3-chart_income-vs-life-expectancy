@@ -1,27 +1,27 @@
-// Construct a canvas 
+// Canvas parameters
 var margin = {top: 100, right: 10, bottom: 75, left: 75},
     width = 800 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom
 
-var svg = d3.select("#chart-area")
+let svg = d3.select("#chart-area")
     .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
 
-var g = svg.append("g")
+let chart = svg.append("g")
     .attr("transform", "translate(" + margin.left + ", " + margin.top + ")")
 
 // Add chart title
-g.append("text")
-    .attr("class", "x axis-label")
+chart.append("text")
+    .attr("class", "x-axis-label")
     .attr("x", width/2)
     .attr("y", -50)
     .attr("text-anchor", "middle")
     .attr("font-size", 18)
 
 // Add axes labels
-g.append("text")
-    .attr("class", "y axis-label")
+chart.append("text")
+    .attr("class", "y-axis-label")
     .attr("x", -height/2)
     .attr("y", -50)
     .attr("text-anchor", "middle")
@@ -29,7 +29,7 @@ g.append("text")
     .attr("transform","rotate(-90)")
     .text("Life Expectancy (years)")
 
-g.append("text")
+chart.append("text")
     .attr("class", "x axis-label")
     .attr("x", width/2)
     .attr("y", height + 50)
@@ -38,7 +38,7 @@ g.append("text")
     .text("GDP Per Capita")
 
 // Add current year
-var current_year_text = g.append("text")
+let current_year_text = chart.append("text")
     .attr("class", "current-year")
     .attr("x", width)
     .attr("y", height - 10)
@@ -47,29 +47,29 @@ var current_year_text = g.append("text")
     .attr("fill", "gray")
 
 // Define scales
-var y = d3.scaleLinear()
-var x = d3.scaleLog()
-var area = d3.scaleLinear()
-var continentColor = d3.scaleOrdinal()
+let y = d3.scaleLinear()
+let x = d3.scaleLog()
+let area = d3.scaleLinear()
+let continentColor = d3.scaleOrdinal()
 
 // Animation time interval
-var timeInterval = 100
+let timeInterval = 100
 
 // Tooltip
-var tip = d3.tip().attr('class', 'd3-tip')
+let tip = d3.tip().attr('class', 'd3-tip')
     .html(function(d) {
-        var text = "<strong>Country:</strong> <span style='color:red'>" + d.country + "</span><br>";
+        let text = "<strong>Country:</strong> <span style='color:red'>" + d.country + "</span><br>";
         text += "<strong>Continent:</strong> <span style='color:red;text-transform:capitalize'>" + d.continent + "</span><br>";
         text += "<strong>Life Expectancy:</strong> <span style='color:red'>" + d3.format(".2f")(d.life_exp) + "</span><br>";
         text += "<strong>GDP Per Capita:</strong> <span style='color:red'>" + d3.format("$,.0f")(d.income) + "</span><br>";
         text += "<strong>Population:</strong> <span style='color:red'>" + d3.format(",.0f")(d.population) + "</span><br>";
         return text;
     });
-g.call(tip);
+chart.call(tip);
 
-var time = 0;
-var interval;
-var dataFiltered;
+let time = 0;
+let interval;
+let dataFiltered;
 
 
 
@@ -81,10 +81,10 @@ d3.json("data/data.json").then(function(data){
     
     // Filter data
     dataFiltered = []
-    for (var yearIdx=0; yearIdx < data.length; yearIdx++){
-        var dataCurrentYear = {year: data[yearIdx].year, countries: []}
-        for (var countryIdx=0; countryIdx < data[yearIdx].countries.length; countryIdx++){
-            var d = data[yearIdx].countries[countryIdx]
+    for (let yearIdx=0; yearIdx < data.length; yearIdx++){
+        let dataCurrentYear = {year: data[yearIdx].year, countries: []}
+        for (let countryIdx=0; countryIdx < data[yearIdx].countries.length; countryIdx++){
+            let d = data[yearIdx].countries[countryIdx]
             if ( !isNaN(parseFloat(d.life_exp)) && !isNaN(parseFloat(d.income)) && !isNaN(parseFloat(d.population)) ){
                 dataCurrentYear.countries.push(d)
             } 
@@ -102,7 +102,7 @@ d3.json("data/data.json").then(function(data){
 // Button controllers
 $("#play-button")
     .on("click", function(){
-        var button = $(this);
+        let button = $(this);
         if (button.text() == "Play"){
             button.text("Pause");
             interval = setInterval(step, 100);            
@@ -150,34 +150,34 @@ function initialize(dataFiltered){
         .domain([0, d3.max(dataFiltered, dataThisYear => 
                            d3.max(dataThisYear.countries, d => d.population))])
         .range([70, 3000])
-        var continents = ["europe", "asia", "americas", "africa"]
+        let continents = ["europe", "asia", "americas", "africa"]
     continentColor
         .domain(continents)
         .range(d3.schemeCategory10)
 
 
     // Add scales
-    var yAxisCall= d3.axisLeft(y)
-    g.append("g")
+    let yAxisCall= d3.axisLeft(y)
+    chart.append("g")
         .attr("class", "y-axis")
         .call(yAxisCall)
 
-    var xAxisCall = d3.axisBottom(x)
+    let xAxisCall = d3.axisBottom(x)
         .ticks(3)
         .tickValues([400, 4000, 40000])
         .tickFormat(d => "$" + d)
-    g.append("g")
+    chart.append("g")
         .attr("class", "x-axis")
         .attr("transform", "translate(0, " + height + ")")
         .call(xAxisCall)
  
 
     // Add legend
-    var legend = g.append("g")
+    let legend = chart.append("g")
         .attr("transform", "translate(" + (width - 10) + "," + (height - 125) + ")")
     
     continents.forEach(function(continentCurrent, i){
-        var legendRow = legend.append("g")
+        let legendRow = legend.append("g")
             .attr("transform", "translate(0, " + (i * 20) + ")")
 
         legendRow.append("rect")
@@ -204,15 +204,15 @@ function step(){
 
 function update(dataObject){
     // Create separate transition object for each transition
-    var t = d3.transition().duration(timeInterval)
+    let t = d3.transition().duration(timeInterval)
 
-    var data = dataObject.countries
-    var current_year = dataObject.year
+    let data = dataObject.countries
+    let current_year = dataObject.year
     current_year_text
         .text(current_year)
 
     
-    var continent = $("#continent-select").val();
+    let continent = $("#continent-select").val();
     
     if (continent !== "all") {
         data = data.filter((d) => {
@@ -224,7 +224,7 @@ function update(dataObject){
     $("#date-slider").slider("value", +(time + 1800))
 
     // JOIN new data with old elements 
-    var circles = g.selectAll("circle")
+    let circles = chart.selectAll("circle")
         .data(data, function(d){
             // Data JOIN tracks the items based on the country value instead of the item index in the array
             return d.country
