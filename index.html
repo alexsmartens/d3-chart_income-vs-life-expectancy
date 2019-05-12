@@ -8,17 +8,42 @@
     <title>D3 chart: Relationship between income and life expectancy</title>
     <!-- D3 Tooltip CSS -->
     <link rel="stylesheet" href="css/d3-tip.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 
 <body>
 
-    <div class="container" align="center">
+    <!-- <div class="container" align="center">
         <div id="chart-area"></div>  
+    </div> -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <button id="play-button" class="btn btn-primary">Play</button>
+                <button id="reset-button" class="btn btn-primary">Reset</button>
+            </div>
+            <div class="col-md-6">
+                <select id="continent-select" class="form-control">
+                    <option selected value="all">All</option>
+                    <option value="europe">Europe</option>
+                    <option value="asia">Asia</option>
+                    <option value="americas">Americas</option>
+                    <option value="africa">Africa</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="chart-area"></div>                 
+            </div> 
+        </div>
     </div>
 
 <!-- External JS libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.1/d3.min.js"></script>
 <script src="js/d3-tip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!-- Custom JS -->
 <script src="js/mainProject.js"></script>
 

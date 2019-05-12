@@ -51,7 +51,7 @@ var current_year_text = g.append("text")
 var y = d3.scaleLinear()
 var x = d3.scaleLog()
 var area = d3.scaleLinear()
-var continent = d3.scaleOrdinal()
+var continentColor = d3.scaleOrdinal()
 
 // Animation time interval
 var timeInterval = 100
@@ -68,18 +68,17 @@ var tip = d3.tip().attr('class', 'd3-tip')
     });
 g.call(tip);
 
+var time = 0;
+var interval;
+var dataFiltered;
+
+
 
 
 
 
 // Load and process data
 d3.json("data/data.json").then(function(data){
-
-	// console.log(data)
-	// // First year data 
-    // console.log(data[0].countries)
-
-
     
     // Filter data
     dataFiltered = []
@@ -94,8 +93,40 @@ d3.json("data/data.json").then(function(data){
         dataFiltered.push(dataCurrentYear)
     }
 
+    initialize(dataFiltered)
+    // Run of the first visualization
+    update(dataFiltered[0])
+    
+})
 
 
+// Button controllers
+$("#play-button")
+    .on("click", function(){
+        var button = $(this);
+        if (button.text() == "Play"){
+            button.text("Pause");
+            interval = setInterval(step, 100);            
+        }
+        else {
+            button.text("Play");
+            clearInterval(interval);
+        }
+    })
+
+$("#reset-button")
+    .on("click", function(){
+        time = 0;
+        update(dataFiltered[0]);
+    })
+
+$("#continent-select")
+    .on("change", function(){
+        update(dataFiltered[time]);
+    })
+
+
+function initialize(dataFiltered){
     // Compute scales
     y
         .domain([0, 90])
@@ -112,34 +143,10 @@ d3.json("data/data.json").then(function(data){
                            d3.max(dataThisYear.countries, d => d.population))])
         .range([70, 3000])
         var continents = ["europe", "asia", "americas", "africa"]
-    continent
+    continentColor
         .domain(continents)
         .range(d3.schemeCategory10)
 
-
-
-    // Add legend
-    var legend = g.append("g")
-        .attr("transform", "translate(" + (width - 10) + "," + (height - 125) + ")")
-    
-    continents.forEach(function(continentCurrent, i){
-        var legendRow = legend.append("g")
-            .attr("transform", "translate(0, " + (i * 20) + ")")
-
-        legendRow.append("rect")
-            .attr("width", 10)
-            .attr("height", 10)
-            .attr("fill", continent(continentCurrent))
-
-        legendRow.append("text")
-            .attr("x", -10)
-            .attr("y", 10)
-            .attr("text-anchor", "end")
-            .style("text-transform", "capitalize")
-            .text(continentCurrent)       
-    })
-
-       
 
     // Add scales
     var yAxisCall= d3.axisLeft(y)
@@ -157,31 +164,37 @@ d3.json("data/data.json").then(function(data){
         .call(xAxisCall)
  
 
+    // Add legend
+    var legend = g.append("g")
+        .attr("transform", "translate(" + (width - 10) + "," + (height - 125) + ")")
+    
+    continents.forEach(function(continentCurrent, i){
+        var legendRow = legend.append("g")
+            .attr("transform", "translate(0, " + (i * 20) + ")")
 
-    // Update figure repeatedly
-    var max_iter = dataFiltered.length
-    var count = 0
+        legendRow.append("rect")
+            .attr("width", 10)
+            .attr("height", 10)
+            .attr("fill", continentColor(continentCurrent))
 
-    d3.interval(function(){
-    // for (var i = 0; i < max_iter; i++ ){
-        if (count < max_iter){
-            updateFigure(dataFiltered[count])
-            count ++
-        } else {
-            count = 0  
-        }
-    // }
-    }, timeInterval)
-
-    // Run of the first visualization
-    updateFigure(dataFiltered[0])
-})
+        legendRow.append("text")
+            .attr("x", -10)
+            .attr("y", 10)
+            .attr("text-anchor", "end")
+            .style("text-transform", "capitalize")
+            .text(continentCurrent)       
+    })
+}
 
 
+function step(){
+    // At the end of our data, loop back
+    time = (time < 214) ? time+1 : 0
+    update(dataFiltered[time]);
+}
 
 
-
-function updateFigure(dataObject){
+function update(dataObject){
     // Create separate transition object for each transition
     var t = d3.transition().duration(timeInterval)
 
@@ -190,7 +203,15 @@ function updateFigure(dataObject){
     current_year_text
         .text(current_year)
 
-
+    
+    var continent = $("#continent-select").val();
+    
+    if (continent !== "all") {
+        data = data.filter((d) => {
+            return d.continent === continent
+        })
+    }
+    
 
     // JOIN new data with old elements 
     var circles = g.selectAll("circle")
@@ -215,7 +236,7 @@ function updateFigure(dataObject){
     // ENTER new elements presented in new data 
     circles.enter()
         .append("circle")
-        .attr("fill", d => continent(d.continent))
+        .attr("fill", d => continentColor(d.continent))
         .attr("cy", d => y(d.life_exp))
         .attr("cx", d => x(d.income))
         .attr("r", 0)
