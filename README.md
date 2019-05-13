@@ -1,3 +1,8 @@
+# Screenshot
+
+![alt text](https://github.com/alexsmartens/d3-chart_income-vs-life-expectancy/blob/master/ScreenshotChart.png)
+
+
 # Installation and Running Instructions 
 
 1) Download/clone the project
