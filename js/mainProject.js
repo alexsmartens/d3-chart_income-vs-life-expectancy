@@ -218,7 +218,7 @@ function updateChart(annualData){
 
 
     // JOIN new data with old elements 
-    let circles = chart.selectAll("circle")
+    let circles = chart.selectAll(".country")
         .data(annualData.countries, function(d){
             // Data JOIN tracks the items based on the country value instead of the array item index
             return d.country;
@@ -231,18 +231,19 @@ function updateChart(annualData){
             .attr("r", 0)
             .remove();
     
-    // UPDATE old elements present in new data
+    // UPDATE old elements present in data
     circles
         .transition(t)
             .attr("cy", d => y(d.life_exp))
             .attr("cx", d => x(d.income))
-            .attr("r", d => Math.sqrt(area(d.population)) / Math.PI)
+            .attr("r", d => Math.sqrt(area(d.population)/ Math.PI))  
             .attr("opacity", d => continent === "all" ? 1 : 
                                     d.continent === continent ? 1 : 0);
 
-    // ENTER new elements presented in new data 
+    // ENTER new elements present in data 
     circles.enter()
         .append("circle")
+        .attr("class", "country")
         .attr("fill", d => continentColor(d.continent))
         .attr("cy", d => y(d.life_exp))
         .attr("cx", d => x(d.income))
@@ -250,9 +251,9 @@ function updateChart(annualData){
         .attr("opacity", 0)
         .on("mouseover", tip.show)
         .on("mouseout", tip.hide)
-        .merge(circles)
         .transition(t)
             .attr("r", d => Math.sqrt(area(d.population)/ Math.PI))  
             .attr("opacity", d => continent === "all" ? 1 : 
                                     d.continent === continent ? 1 : 0);
+
 }
