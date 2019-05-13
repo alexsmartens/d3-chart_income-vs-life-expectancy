@@ -218,42 +218,43 @@ function updateChart(annualData){
 
 
     // JOIN new data with old elements 
-    let circles = chart.selectAll(".country")
+    chart.selectAll(".country")
         .data(annualData.countries, function(d){
             // Data JOIN tracks the items based on the country value instead of the array item index
             return d.country;
-        });
-
-    // EXIT old elements
-    circles.exit()
-        .transition(t)
-            .attr("opacity", 0)
-            .attr("r", 0)
-            .remove();
-    
-    // UPDATE old elements present in data
-    circles
-        .transition(t)
-            .attr("cy", d => y(d.life_exp))
-            .attr("cx", d => x(d.income))
-            .attr("r", d => Math.sqrt(area(d.population)/ Math.PI))  
-            .attr("opacity", d => continent === "all" ? 1 : 
-                                    d.continent === continent ? 1 : 0);
-
-    // ENTER new elements present in data 
-    circles.enter()
-        .append("circle")
-        .attr("class", "country")
-        .attr("fill", d => continentColor(d.continent))
-        .attr("cy", d => y(d.life_exp))
-        .attr("cx", d => x(d.income))
-        .attr("r", 0)
-        .attr("opacity", 0)
-        .on("mouseover", tip.show)
-        .on("mouseout", tip.hide)
-        .transition(t)
-            .attr("r", d => Math.sqrt(area(d.population)/ Math.PI))  
-            .attr("opacity", d => continent === "all" ? 1 : 
-                                    d.continent === continent ? 1 : 0);
-
+        })
+        .join(
+            // ENTER new elements present in data 
+            enter => enter
+                    .append("circle")
+                    .attr("class", "country")
+                    .attr("fill", d => continentColor(d.continent))
+                    .attr("cy", d => y(d.life_exp))
+                    .attr("cx", d => x(d.income))
+                    .attr("r", 0)
+                    .attr("opacity", 0)
+                    .on("mouseover", tip.show)
+                    .on("mouseout", tip.hide)
+                .call(enter => enter.transition(t)
+                    .attr("r", d => Math.sqrt(area(d.population)/ Math.PI))  
+                    .attr("opacity", d => continent === "all" ? 1 : 
+                                            d.continent === continent ? 1 : 0)
+                ),
+            // UPDATE old elements present in data
+            update => update
+                .call(update => update.transition(t)
+                    .attr("cy", d => y(d.life_exp))
+                    .attr("cx", d => x(d.income))
+                    .attr("r", d => Math.sqrt(area(d.population)/ Math.PI))  
+                    .attr("opacity", d => continent === "all" ? 1 : 
+                                            d.continent === continent ? 1 : 0)
+                ),
+            // EXIT old elements
+            exit => exit
+                .call(exit => exit.transition(t)
+                    .attr("opacity", 0)
+                    .attr("r", 0)
+                    .remove()
+                )
+        );
 }
